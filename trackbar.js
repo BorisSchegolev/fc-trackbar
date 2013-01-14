@@ -211,9 +211,8 @@ trackbar.hotSearch.prototype = {
 			this.tickDiv = this.gebi(this.TICKDIV_PREFIX + this.id);
 			// Set default
 			this.valueWidth = this.width - 2 * this.widthRem;
-			
-			if (this.rightValue===false) this.rightValue=this.rightLimit;
-			if (this.leftValue===false) this.leftValue=this.leftLimit;
+			if (this.rightValue===false|isNaN(this.rightValue)) {this.rightValue = this.rightValue || this.rightLimit};
+			if (this.leftValue===false|isNaN(this.leftValue)) {this.leftValue = this.leftValue || this.leftLimit};
 			if (!this.dual) this.rightValue = this.leftValue;
 			this.valueInterval = this.rightLimit - this.leftLimit;
 			this.leftWidth = Math.abs(parseInt((this.leftValue - this.leftLimit) / this.valueInterval * this.valueWidth) + this.widthRem);
