@@ -44,7 +44,7 @@ trackbar.hotSearch = function(id) { // Constructor
 	this.dual = true;
 	this.moveState = false;
 	this.moveIntervalState = false;
-	this.debugMode = true;
+	this.debugMode = false;
 	this.clearLimits = false;
 	this.clearValues = false;
 	this.nodeInit = false;
@@ -56,6 +56,7 @@ trackbar.hotSearch = function(id) { // Constructor
 	this.bigTicks = 1;
 	// Handlers
 	this.onMove = function() {};
+	this.onMoveEnd = function () {};
 	// Nodes
 	this.leftBlock = null;
 	this.rightBlock = null;
@@ -64,6 +65,7 @@ trackbar.hotSearch = function(id) { // Constructor
 	this.centerBlock = null;
 	this.tickDiv = null;
 	this.table = null;
+	
 }
 
 trackbar.hotSearch.prototype = {
@@ -182,9 +184,9 @@ trackbar.hotSearch.prototype = {
 			// HTML Write
 			var code = '<div class="tickdiv" id="'+this.TICKDIV_PREFIX+this.id+'"></div><table id="'+this.TABLE_PREFIX+this.id+'" ' + (this.width ? ' style="width:'+this.width+'px;"' : '') + 'class="trackbar" onSelectStart="return false;">\
 				<tr>\
-					<td class="l"><div id="leftBlock_' + this.id + '"><span></span><span class="limit"></span><img id="leftBegun_' + this.id + '" ondragstart="return false;" src="imgtrackbar/b_l.gif" width="5" height="17" alt="" /></div></td>\
+					<td class="l"><div id="leftBlock_' + this.id + '"><span></span><span class="limit"></span><img id="leftBegun_' + this.id + '" ondragstart="return false;" src="../img/imgtrackbar/b_l.gif" alt="" /></div></td>\
 					<td class="c" id="centerBlock_' + this.id + '"></td>\
-					<td class="r"><div id="rightBlock_' + this.id + '"><span></span><span class="limit"></span><img id="rightBegun_' + this.id + '" ondragstart="return false;" src="imgtrackbar/b_r.gif" width="5" height="17" alt="" /></div></td>\
+					<td class="r"><div id="rightBlock_' + this.id + '"><span></span><span class="limit"></span><img id="rightBegun_' + this.id + '" ondragstart="return false;" src="../img/imgtrackbar/b_r.gif" alt="" /></div></td>\
 				</tr>\
 			</table>';
 			if (node) node.innerHTML = code;
@@ -209,8 +211,9 @@ trackbar.hotSearch.prototype = {
 			this.tickDiv = this.gebi(this.TICKDIV_PREFIX + this.id);
 			// Set default
 			this.valueWidth = this.width - 2 * this.widthRem;
-			this.rightValue = this.rightValue || this.rightLimit;
-			this.leftValue = this.leftValue || this.leftLimit;
+			
+			if (this.rightValue===false) this.rightValue=this.rightLimit;
+			if (this.leftValue===false) this.leftValue=this.leftLimit;
 			if (!this.dual) this.rightValue = this.leftValue;
 			this.valueInterval = this.rightLimit - this.leftLimit;
 			this.leftWidth = Math.abs(parseInt((this.leftValue - this.leftLimit) / this.valueInterval * this.valueWidth) + this.widthRem);
@@ -237,7 +240,11 @@ trackbar.hotSearch.prototype = {
 			this.addHandler (
 				document,
 				"mouseup",
-				function() {
+				function() {//TODO: FIXME
+					if (_this.moveState || _this.itWasMove) {
+						_this.onMoveEnd();
+						_this.itWasMove = false;
+					}
 					_this.moveState = false;
 					_this.moveIntervalState = false;
 				}
@@ -279,7 +286,7 @@ trackbar.hotSearch.prototype = {
 					_this.rightX0 = _this.rightWidth; 
 					_this.leftX0 = _this.leftWidth;
 				}
-			),
+			);
 			this.addHandler (
 				this.centerBlock,
 				"click",
