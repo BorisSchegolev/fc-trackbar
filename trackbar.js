@@ -44,7 +44,7 @@ trackbar.hotSearch = function(id) { // Constructor
 	this.dual = true;
 	this.moveState = false;
 	this.moveIntervalState = false;
-	this.debugMode = false;
+	this.debugMode = true;
 	this.clearLimits = false;
 	this.clearValues = false;
 	this.nodeInit = false;
@@ -211,6 +211,7 @@ trackbar.hotSearch.prototype = {
 			this.tickDiv = this.gebi(this.TICKDIV_PREFIX + this.id);
 			// Set default
 			this.valueWidth = this.width - 2 * this.widthRem;
+
 			if (this.rightValue===false|isNaN(this.rightValue)) {this.rightValue = this.rightValue || this.rightLimit};
 			if (this.leftValue===false|isNaN(this.leftValue)) {this.leftValue = this.leftValue || this.leftLimit};
 			if (!this.dual) this.rightValue = this.leftValue;
@@ -242,7 +243,7 @@ trackbar.hotSearch.prototype = {
 				function() {//TODO: FIXME
 					if (_this.moveState || _this.itWasMove) {
 						_this.onMoveEnd();
-						_this.itWasMove = false;
+					//	_this.itWasMove = false;
 					}
 					_this.moveState = false;
 					_this.moveIntervalState = false;
@@ -328,6 +329,7 @@ trackbar.hotSearch.prototype = {
 
 		this.setCurrentState();
 		this.onMove();
+		this.onMoveEnd();
 	},
 	clickMoveLeft : function(evt) {
 		evt = evt || window.event;
@@ -341,6 +343,7 @@ trackbar.hotSearch.prototype = {
 
 		this.setCurrentState();
 		this.onMove();
+		this.onMoveEnd();
 	},
 	clickMove : function(evt) {
 		evt = evt || window.event;
@@ -358,6 +361,7 @@ trackbar.hotSearch.prototype = {
 		}
 		this.setCurrentState();
 		this.onMove();
+		this.onMoveEnd();
 	},
 	setCurrentState : function() {
 		this.leftBlock.style.width = this.leftWidth + "px";
