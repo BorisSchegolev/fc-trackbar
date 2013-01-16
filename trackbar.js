@@ -49,6 +49,7 @@ trackbar.hotSearch = function(id) { // Constructor
 	this.clearValues = false;
 	this.nodeInit = false;
 	this.itWasMove = false;
+	this.itMoveEnd = false;
 	
 	this.showSmallTicks = false;
 	this.showBigTicks = false;
@@ -240,10 +241,11 @@ trackbar.hotSearch.prototype = {
 			this.addHandler (
 				document,
 				"mouseup",
-				function() {//TODO: FIXME
+				function() {
 					if (_this.moveState || _this.itWasMove) {
 						_this.onMoveEnd();
-					//	_this.itWasMove = false;
+						_this.itWasMove = false;
+						_this.itMoveEnd = true;
 					}
 					_this.moveState = false;
 					_this.moveIntervalState = false;
@@ -291,7 +293,8 @@ trackbar.hotSearch.prototype = {
 				this.centerBlock,
 				"click",
 				function(evt) {
-					if (!_this.itWasMove) _this.clickMove(evt);
+					if (!_this.itWasMove & !_this.itMoveEnd) _this.clickMove(evt);
+					_this.itMoveEnd = false;
 					_this.itWasMove = false;
 				}
 			);
